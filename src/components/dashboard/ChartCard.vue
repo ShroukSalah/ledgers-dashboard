@@ -5,10 +5,15 @@ defineProps({
     chartData: Object,
     chartOptions: Object,
     height: {
-    type: String,
-     
+        type: String,
+
+    },
+     plugins: {
+    type: Array,
+    default: () => []
   }
 })
+
 </script>
 
 <template>
@@ -18,7 +23,9 @@ defineProps({
             {{ title }}
         </h3>
 
-        <Chart :type="type" :data="chartData" :options="chartOptions" ref="canvas" :class="height" />
+        <Chart :type="type" :data="chartData" :options="chartOptions" ref="canvas"   :plugins="plugins"
+
+            :class="height" />
 
     </div>
 </template>
