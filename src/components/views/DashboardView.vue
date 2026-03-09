@@ -7,8 +7,7 @@ import ChartCard from '../dashboard/ChartCard.vue'
 import ForecastTuner from '../dashboard/ForecastTuner.vue'
 import CashFlowTuner from '../dashboard/CashFlowTuner.vue'
 
-const chartRef = ref(null)
-
+ 
 const revenueExpenseData = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   datasets: [
@@ -101,7 +100,7 @@ const profitLossOptions = {
   }
 }
 
-const GoalCompletion = {
+const goalCompletionData  = {
   labels: ['Rev', 'OpEx'],
   datasets: [
     {
@@ -340,33 +339,14 @@ const createGradient = (ctx, chartArea, color) => {
 
   return gradient
 }
-onMounted(() => {
-
-  const chart = chartRef.value.chart
-  const ctx = chart.ctx
-  const h = chart.height
-
-  const blue = ctx.createLinearGradient(0, 0, 0, h)
-  blue.addColorStop(0, "rgba(30,136,229,0.8)")
-  blue.addColorStop(1, "rgba(30,136,229,0)")
-
-  const pink = ctx.createLinearGradient(0, 0, 0, h)
-  pink.addColorStop(0, "rgba(255,77,141,0.8)")
-  pink.addColorStop(1, "rgba(255,77,141,0)")
-
-  chart.data.datasets[0].backgroundColor = pink
-  chart.data.datasets[1].backgroundColor = blue
-
-  chart.update()
-
-})
+ 
 </script>
 
 <template>
   <DashboardLayout>
 
     <div class="grid grid-cols-12 gap-6">
-      <div class="col-span-8">
+      <div class="lg:col-span-8 col-span-12">
         <!-- KpiCard -->
         <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3 mb-6">
           <KpiCard title="Revenue" value="1400000" change="+4%" />
@@ -392,7 +372,7 @@ onMounted(() => {
                 height="h-32" />
             </div>
             <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm   h-fit ">
-              <ChartCard type="bar" title="Goal Completion" :chartData="GoalCompletion"
+              <ChartCard type="bar" title="Goal Completion" :chartData="goalCompletionData"
                 :chartOptions="GoalCompletionOptions" height="h-32" />
             </div>
           </div>
@@ -420,7 +400,7 @@ onMounted(() => {
 
         </div>
       </div>
-      <div class="col-span-4 bg-[#4499e3] rounded-2xl p-4">
+      <div class="lg:col-span-4 col-span-12 bg-[#4499e3] rounded-2xl p-4">
         <ForecastTuner class="mb-4"/>
         <CashFlowTuner />
 
