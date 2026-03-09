@@ -6,6 +6,8 @@ import './style.css'
 import PrimeVue from 'primevue/config'
 import Chart from 'primevue/chart'
 import 'primeicons/primeicons.css'
+import 'primeicons/primeicons.css'
+
 
 const app = createApp(App)
 

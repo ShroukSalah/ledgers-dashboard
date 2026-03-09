@@ -4,6 +4,9 @@ import { ref, onMounted } from "vue"
 import DashboardLayout from '../layout/DashboardLayout.vue'
 import KpiCard from '../dashboard/KpiCard.vue'
 import ChartCard from '../dashboard/ChartCard.vue'
+import ForecastTuner from '../dashboard/ForecastTuner.vue'
+import CashFlowTuner from '../dashboard/CashFlowTuner.vue'
+
 const chartRef = ref(null)
 
 const revenueExpenseData = {
@@ -302,25 +305,25 @@ const netFlowData = {
   ]
 }
 const highlightPlugin = {
-    id: "highlightArea",
-    beforeDraw(chart) {
-        const { ctx, chartArea } = chart
+  id: "highlightArea",
+  beforeDraw(chart) {
+    const { ctx, chartArea } = chart
 
-        if (!chartArea) return
+    if (!chartArea) return
 
-        const width = chartArea.right - chartArea.left
-        const highlightWidth = width * 0.25
+    const width = chartArea.right - chartArea.left
+    const highlightWidth = width * 0.25
 
-        ctx.save()
-        ctx.fillStyle = "rgba(30,136,229,0.15)"
-        ctx.fillRect(
-            chartArea.right - highlightWidth,
-            chartArea.top,
-            highlightWidth,
-            chartArea.bottom - chartArea.top
-        )
-        ctx.restore()
-    }
+    ctx.save()
+    ctx.fillStyle = "rgba(30,136,229,0.15)"
+    ctx.fillRect(
+      chartArea.right - highlightWidth,
+      chartArea.top,
+      highlightWidth,
+      chartArea.bottom - chartArea.top
+    )
+    ctx.restore()
+  }
 }
 const createGradient = (ctx, chartArea, color) => {
   const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
@@ -363,9 +366,9 @@ onMounted(() => {
   <DashboardLayout>
 
     <div class="grid grid-cols-12 gap-6">
-      <div class="col-span-9">
+      <div class="col-span-8">
         <!-- KpiCard -->
-        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3 mb-6">
           <KpiCard title="Revenue" value="1400000" change="+4%" />
           <KpiCard title="Gross Profit" value="1250000" change="+14%" />
           <KpiCard title="Op.Expenses" value="600000" change="+34%" />
@@ -378,7 +381,7 @@ onMounted(() => {
         <div class="grid grid-cols-12 gap-6">
           <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm col-span-12 lg:col-span-8">
             <ChartCard type="bar" title="Revenue vs Expenses" :chartData="revenueExpenseData"
-              :chartOptions="revenueExpenseOptions" height="h-[300px]" :plugins="[highlightPlugin]"/>
+              :chartOptions="revenueExpenseOptions" height="h-[300px]" :plugins="[highlightPlugin]" />
             <p class="text-xs text-gray-400 mt-3 ps-15 font-medium">
               ✨ Losses in March and April driven by seasonality + marketing spikes
             </p>
@@ -399,25 +402,29 @@ onMounted(() => {
         <div class="grid grid-cols-12 gap-6 mt-5 bg-[#4499e3] rounded-2xl p-4">
           <div class="bg-white  rounded-2xl border border-gray-100 shadow-sm col-span-12 lg:col-span-7 cashChart">
             <ChartCard type="line" title="Cash Inflow vs outflow" :chartData="cashFlowData"
-              :chartOptions="cashFlowOptions" height="h-[280px]" :plugins="[highlightPlugin]"/>
+              :chartOptions="cashFlowOptions" height="h-[280px]" :plugins="[highlightPlugin]" />
 
           </div>
           <div class=" col-span-12 lg:col-span-5">
             <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-fit mb-5">
 
               <ChartCard type="line" title="Cash in Bank" :chartData="cashBankData" :chartOptions="miniChartOptions"
-                height="h-28" :plugins="[highlightPlugin]"/>
+                height="h-28" :plugins="[highlightPlugin]" />
             </div>
             <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm   h-fit ">
               <ChartCard type="line" title="NetFlow" :chartData="netFlowData" :chartOptions="miniChartOptions"
-                height="h-28" :plugins="[highlightPlugin]"/>
+                height="h-28" :plugins="[highlightPlugin]" />
             </div>
           </div>
 
 
         </div>
       </div>
+      <div class="col-span-4 bg-[#4499e3] rounded-2xl p-4">
+        <ForecastTuner class="mb-4"/>
+        <CashFlowTuner />
 
+      </div>
     </div>
 
   </DashboardLayout>

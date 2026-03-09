@@ -22,7 +22,7 @@ defineProps({
             <span class="text-xs text-green-600 font-medium block text-end">
                 {{ change }}
             </span>
-            <span class="text-xs text-gray-400 font-semibold">
+            <span class="text-[.7rem] text-gray-400 font-semibold">
                 vs previous month
             </span>
         </div>
