@@ -1,345 +1,29 @@
 <script setup>
-import { ref, onMounted } from "vue"
-
 import DashboardLayout from '../layout/DashboardLayout.vue'
 import KpiCard from '../dashboard/KpiCard.vue'
 import ChartCard from '../dashboard/ChartCard.vue'
 import ForecastTuner from '../dashboard/ForecastTuner.vue'
 import CashFlowTuner from '../dashboard/CashFlowTuner.vue'
+import { useCharts } from "../../composables/useCharts"
 
- 
-const revenueExpenseData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  datasets: [
-    {
-      label: 'Revenue',
-      backgroundColor: '#1d8cf8',
-      borderRadius: 8,
-      data: [180, 650, 720, 540, 230, 190, 310, 250, 380, 690, 850, 800],
-      // barPercentage: 0.6,
-      categoryPercentage: 0.6,
-    },
-    {
-      label: 'Expenses',
-      backgroundColor: '#ff4d8d',
-      borderRadius: 8,
-      data: [560, 630, 820, 720, 700, 420, 540, 590, 720, 820, 900, 740],
-      // barPercentage: 0.6,
-      categoryPercentage: 0.6,
-    }
-  ]
-}
+const {
+  revenueExpenseData,
+  profitLossData,
+  goalCompletionData,
+  cashFlowData,
+  cashBankData,
+  netFlowData,
 
-const revenueExpenseOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
+  revenueExpenseOptions,
+  profitLossOptions,
+  GoalCompletionOptions,
+  miniChartOptions,
+  cashFlowOptions,
 
-  plugins: {
-    legend: {
-      display: false
-    }
-  },
+  highlightPlugin,
+  createGradient
+} = useCharts()
 
-  scales: {
-    x: {
-      grid: {
-        display: false
-      }
-    },
-    y: {
-      grid: {
-        color: '#f1f5f9'
-      }
-    }
-  }
-}
-
-const profitLossData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-
-  datasets: [
-    {
-      data: [-20, -10, -25, -5, -40, 5, 10, 30, 25, 35],
-
-      fill: true,
-      tension: 0.45,
-      borderWidth: 0,
-      pointRadius: 4,
-
-      pointBackgroundColor: '#ffffff',
-
-      segment: {
-        backgroundColor: ctx => {
-          if (ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0) {
-            return 'rgba(255,77,141,0.6)'
-          }
-          return 'rgba(29,140,248,0.6)'
-        }
-      }
-    }
-  ]
-}
-
-const profitLossOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-
-  plugins: {
-    legend: {
-      display: false
-    }
-  },
-
-  scales: {
-    x: {
-      display: false
-    },
-    y: {
-      display: false
-    }
-  }
-}
-
-const goalCompletionData  = {
-  labels: ['Rev', 'OpEx'],
-  datasets: [
-    {
-      label: 'Rev',
-      data: [10, 55],
-      backgroundColor: '#ff4d8d',
-      borderRadius: 20
-    }, {
-      label: 'OpEx',
-      data: [40, 55],
-      backgroundColor: '#1d8cf8',
-      borderRadius: 20
-    }
-
-  ]
-}
-
-const GoalCompletionOptions = {
-  indexAxis: 'y',
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
-    }
-  },
-  scales: {
-    x: {
-      stacked: true,
-      beginAtZero: true,
-
-      grid: {
-        display: false,
-        drawTicks: false,
-        drawBorder: false,
-        drawOnChartArea: false
-      },
-      ticks: {
-        display: false
-      },
-      border: {
-        display: false
-      }
-    },
-    y: {
-      stacked: true,
-      grid: {
-
-        display: false
-      }
-    }
-  }
-}
-const cashFlowData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  datasets: [
-    {
-      label: "Outflow",
-      data: [25, 10, 20, 8, 8, 35, 5, 18, 35, 22, 25, 35],
-      elements: {
-        line: {
-          borderWidth: 2
-        },
-        point: {
-          radius: 3,
-          hoverRadius: 3
-        }
-      },
-      borderColor: "#ff4d8d",
-      backgroundColor: (context) => {
-        const { ctx, chartArea } = context.chart
-        if (!chartArea) return
-        return createGradient(ctx, chartArea, "pink")
-      },
-
-      tension: 0.45,
-      fill: true,
-
-      pointRadius: 4,
-      pointBackgroundColor: "#fff",
-      pointBorderColor: "#ff4d8d",
-      pointBorderWidth: 2
-    },
-    {
-      label: "Inflow",
-      data: [70, 35, 55, 45, 50, 70, 40, 60, 75, 60, 65, 90],
-
-      borderColor: "#1E88E5",
-      backgroundColor: (context) => {
-        const { ctx, chartArea } = context.chart
-        if (!chartArea) return
-        return createGradient(ctx, chartArea, "blue")
-      },
-
-      tension: 0.45,
-      fill: true,
-
-      pointRadius: 4,
-      pointBackgroundColor: "#fff",
-      pointBorderColor: "#1E88E5",
-      pointBorderWidth: 2
-    }
-  ]
-}
-const cashFlowOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-
-  plugins: {
-    legend: { display: false }
-  },
-
-  scales: {
-    x: {
-      grid: { display: false }
-    },
-    y: {
-      display: false
-    }
-  },
-
-  elements: {
-    line: {
-      borderWidth: 3
-    }
-  }
-}
-const cashBankData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-  datasets: [
-    {
-      data: [15, 10, 22, 18, 25, 20, 17, 22, 12, 26],
-
-      borderColor: '#5aa7ff',
-      backgroundColor: 'rgba(90,167,255,0.15)',
-
-      tension: 0.45,
-      fill: true,
-
-      pointRadius: 4,
-      pointBackgroundColor: '#fff',
-      pointBorderColor: '#5aa7ff',
-      pointBorderWidth: 2
-    }
-  ]
-}
-
-const miniChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-
-  plugins: {
-    legend: { display: false },
-    tooltip: { enabled: false }
-  },
-
-  scales: {
-    x: { display: false, },
-    y: { display: false }
-  },
-
-  elements: {
-    line: {
-      borderWidth: 2
-    }
-  }
-}
-const netFlowData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-  datasets: [
-    {
-      data: [12, 14, 10, 18, 20, 17, 9, -2, -10, 6],
-
-      tension: 0.45,
-      borderWidth: 2,
-
-      segment: {
-        borderColor: ctx => {
-          if (ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0)
-            return '#ff4d8d'
-          return '#5aa7ff'
-        }
-      },
-      elements: {
-        line: {
-          borderWidth: 2
-        },
-        point: {
-          radius: 3,
-          hoverRadius: 3
-        }
-      },
-      pointRadius: 4,
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 2,
-
-      pointBorderColor: ctx => {
-        return ctx.parsed.y < 0 ? '#ff4d8d' : '#5aa7ff'
-      }
-    }
-  ]
-}
-const highlightPlugin = {
-  id: "highlightArea",
-  beforeDraw(chart) {
-    const { ctx, chartArea } = chart
-
-    if (!chartArea) return
-
-    const width = chartArea.right - chartArea.left
-    const highlightWidth = width * 0.25
-
-    ctx.save()
-    ctx.fillStyle = "rgba(30,136,229,0.15)"
-    ctx.fillRect(
-      chartArea.right - highlightWidth,
-      chartArea.top,
-      highlightWidth,
-      chartArea.bottom - chartArea.top
-    )
-    ctx.restore()
-  }
-}
-const createGradient = (ctx, chartArea, color) => {
-  const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-
-  if (color === "blue") {
-    gradient.addColorStop(0, "rgba(30,136,229,0.7)")
-    gradient.addColorStop(1, "rgba(30,136,229,0)")
-  }
-
-  if (color === "pink") {
-    gradient.addColorStop(0, "rgba(255,77,141,0.7)")
-    gradient.addColorStop(1, "rgba(255,77,141,0)")
-  }
-
-  return gradient
-}
- 
 </script>
 
 <template>
@@ -401,7 +85,7 @@ const createGradient = (ctx, chartArea, color) => {
         </div>
       </div>
       <div class="lg:col-span-4 col-span-12 bg-[#4499e3] rounded-2xl p-4">
-        <ForecastTuner class="mb-4"/>
+        <ForecastTuner class="mb-4" />
         <CashFlowTuner />
 
       </div>
